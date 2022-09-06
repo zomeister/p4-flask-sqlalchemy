@@ -58,6 +58,84 @@ would benefit your project.
 
 ## Managing Databases with Flask-SQLAlchemy
 
+Run `pipenv install && pipenv shell` to install Flask, Flask-SQLAlchemy, and
+Flask-Migrate in your virtual environment. Enter the following in
+`flask_app.py`:
+
+```py
+#!/usr/bin/env python3
+
+from flask import Flask
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/app.db'
+
+if __name__ == '__main__':
+    app.run()
+
+```
+
+Just as with our other Flask applications, we start off with an application
+file that creates an instance of the `Flask` class with the module's name.
+We are also taking advantage of this opportunity to start configuring our
+database: in Phase 3, we would have defined this in `alembic.ini`. Since we're
+using Flask-Migrate instead of pure Alembic, we define the environment variables
+in the application itself.
+
+Now that we have a basic application ready to run, let's configure some models.
+
+### Models with Flask-SQLAlchemy
+
+The structure of models in Flask-SQLAlchemy is identical to that of SQLAlchemy
+models with one exception: rather than importing individual fields from the
+SQLAlchemy module, we import a `SQLAlchemy` class from Flask-SQLAlchemy that
+contains all of the same fields as attributes. This behaves similarly to
+`declarative_base` in SQLAlchemy.
+
+Let's create some models!
+
+```py
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
+
+class Owner(db.Model):
+    __tablename__ = 'owners'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, unique=True)
+
+    pets = db.relationship('Pet', backref='owner')
+
+    def __repr__(self):
+        return f'<Pet Owner {self.name}>'
+
+class Pet(db.Model):
+    __tablename__ = 'users'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    species = db.Column(db.String)
+
+    owner_id = db.Column(db.Integer, db.ForeignKey('owners.id'))
+
+    def __repr__(self):
+        return f'<Pet {self.name}, {self.species}>'
+
+```
+
+As you can see, these are very similar to the models we set up in Phase 3.
+rather than using a `Base` as a parent object for each of our models, we use
+the `db` object's `Model` class. Inside of the models, we retrieve important
+classes and methods through the `db` object. All classes that can be imported
+from vanilla `SQLAlchemy` can be accessed through the `db` object.
+
+We can manually add these data models to the database, but there aren't many
+valid reasons to do that in your work. Instead, we will generate our database
+from our models using Flask-Migrate.
+
+### Flask-Migrate
+
 ***
 
 ## Resources

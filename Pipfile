@@ -5,12 +5,10 @@ name = "pypi"
 
 [packages]
 flask = "*"
-sqlalchemy = "*"
-pytest = "*"
-ipdb = "*"
-alembic = "*"
 flask-sqlalchemy = "*"
 flask-migrate = "*"
+ipdb = "*"
+pytest = "*"
 
 [dev-packages]
 
