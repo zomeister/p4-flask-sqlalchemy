@@ -2,24 +2,25 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-class Role(db.Model):
-    __tablename__ = 'roles'
+class Owner(db.Model):
+    __tablename__ = 'owners'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True)
 
-    users = db.relationship('User', backref='role')
+    pets = db.relationship('Pet', backref='owner')
 
     def __repr__(self):
-        return f'<Role {self.name}>'
+        return f'<Pet Owner {self.name}>'
 
-class User(db.Model):
-    __tablename__ = 'users'
+class Pet(db.Model):
+    __tablename__ = 'pets'
     
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String, unique=True, index=True)
+    name = db.Column(db.String)
+    species = db.Column(db.String)
 
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    owner_id = db.Column(db.Integer, db.ForeignKey('owners.id'))
 
     def __repr__(self):
-        return f'<User {self.username}>'
+        return f'<Pet {self.name}, {self.species}>'
