@@ -60,10 +60,10 @@ would benefit your project.
 
 Run `pipenv install && pipenv shell` to install Flask, Flask-SQLAlchemy, and
 Flask-Migrate in your virtual environment. Enter the following in
-`flask_app.py`:
+`app.py`:
 
 ```py
-# app/flask_app.py
+# app/app.py
 
 #!/usr/bin/env python3
 
@@ -73,7 +73,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/app.db'
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=5555)
 
 ```
 
@@ -145,10 +145,10 @@ Alembic with minimal changes to allow it to integrate better with Flask
 applications. This can become a bit confusing, especially from the command line.
 Don't worry though- we'll discuss those nuances in detail here!
 
-Modify `flask_app.py` to mirror the following:
+Modify `app.py` to mirror the following:
 
 ```py
-# app/flask_app.py
+# app/app.py
 
 #!/usr/bin/env python3
 
@@ -159,7 +159,7 @@ from flask_migrate import Migrate
 from models import db
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/app.db'
 
 db = SQLAlchemy(app)
 
@@ -168,7 +168,7 @@ migrate = Migrate(app, db)
 db.init_app(app)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=5555)
 
 ```
 
@@ -185,7 +185,8 @@ place of `alembic` in commands. Run the following from the `app/` directory in
 the command line:
 
 ```console
-$ export FLASK_APP=flask_app.py
+$ export FLASK_APP=app.py
+$ export FLASK_RUN_PORT=5555
 $ flask db init
 # => /python-p4-flask-sqlalchemy/.venv/lib/python3.10/site-packages/flask_sqlalchemy/__init__.py:872: FSADeprecationWarning: SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True or False to suppress this warning.
 # =>   warnings.warn(FSADeprecationWarning(
@@ -203,18 +204,18 @@ $ flask db init
 Let's heed that warning and set `SQLALCHEMY_TRACK_MODIFICATIONS` to `False`.
 
 ```py
-# app/flask_app.py
+# app/app.py
 
 ...
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 ...
 
 ```
 
 We're getting a warning to change `app/migrations/alembic.ini` before we
-continue, but our `app/flask_app.py` configuration already manages all of our
+continue, but our `app/app.py` configuration already manages all of our
 unique environment variables. We can jump straight into migrating:
 
 ```console
@@ -258,7 +259,7 @@ using Flask-SQLAlchemy.
 ## Solution Code
 
 ```py
-# app/flask_app.py
+# app/app.py
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -275,7 +276,7 @@ migrate = Migrate(app, db)
 db.init_app(app)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=5555)
 
 ```
 
