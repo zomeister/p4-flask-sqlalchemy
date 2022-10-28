@@ -70,7 +70,7 @@ Flask-Migrate in your virtual environment. Enter the following in
 from flask import Flask
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/app.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 
 if __name__ == '__main__':
     app.run(port=5555)
@@ -159,7 +159,7 @@ from flask_migrate import Migrate
 from models import db
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/app.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 
 db = SQLAlchemy(app)
 
@@ -208,7 +208,7 @@ Let's heed that warning and set `SQLALCHEMY_TRACK_MODIFICATIONS` to `False`.
 
 ...
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/app.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 ...
 
@@ -235,7 +235,7 @@ $ flask db upgrade head
 ```
 
 We've created a database with Flask-SQLAlchemy and Flask-Migrate! Open
-`app/db/app.db` and you should see the fruits of your labor:
+`app/app.db` and you should see the fruits of your labor:
 
 ![Screenshot of SQLite database with three tables: alembic_version, owners, and
 pets](
@@ -268,7 +268,7 @@ from flask_migrate import Migrate
 from models import db
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/app.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 migrate = Migrate(app, db)
