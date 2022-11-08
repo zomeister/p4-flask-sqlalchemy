@@ -81,8 +81,8 @@ Just as with our other Flask applications, we start off with an application
 file that creates an instance of the `Flask` class with the module's name.
 We are also taking advantage of this opportunity to start configuring our
 database: in Phase 3, we would have defined this in `alembic.ini`. Since we're
-using Flask-Migrate instead of pure Alembic, we define the environment variables
-in the application itself.
+using Flask-Migrate instead of pure Alembic, we define the application
+configuration variables in the application itself.
 
 Now that we have a basic application ready to run, let's configure some models.
 
@@ -129,7 +129,7 @@ class Pet(db.Model):
 ```
 
 As you can see, these are very similar to the models we set up in Phase 3.
-rather than using a `Base` as a parent object for each of our models, we use
+Rather than using a `Base` as a parent object for each of our models, we use
 the `db` object's `Model` class. Inside of the models, we retrieve important
 classes and methods through the `db` object. All classes that can be imported
 from vanilla `SQLAlchemy` can be accessed through the `db` object.
@@ -216,7 +216,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 We're getting a warning to change `app/migrations/alembic.ini` before we
 continue, but our `app/app.py` configuration already manages all of our
-unique environment variables. We can jump straight into migrating:
+unique application configuration variables. We can jump straight into migrating:
 
 ```console
 $ flask db revision --autogenerate -m'Create tables owners, pets'
@@ -235,7 +235,8 @@ $ flask db upgrade head
 ```
 
 We've created a database with Flask-SQLAlchemy and Flask-Migrate! Open
-`app/app.db` and you should see the fruits of your labor:
+`app/app.db` (or `app/instance/app.db`, depending on your version of
+Flask-SQLAlchemy) and you should see the fruits of your labor:
 
 ![Screenshot of SQLite database with three tables: alembic_version, owners, and
 pets](
