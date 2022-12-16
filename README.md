@@ -58,14 +58,12 @@ would benefit your project.
 
 ## Managing Databases with Flask-SQLAlchemy
 
-Run `pipenv install && pipenv shell` to install Flask, Flask-SQLAlchemy, and
+Run `pipenv install; pipenv shell` to install Flask, Flask-SQLAlchemy, and
 Flask-Migrate in your virtual environment. Enter the following in
 `app.py`:
 
 ```py
-# app/app.py
-
-#!/usr/bin/env python3
+# server/app.py
 
 from flask import Flask
 
@@ -73,7 +71,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 
 if __name__ == '__main__':
-    app.run(port=5555)
+    app.run(port=5555, debug=True)
 
 ```
 
@@ -97,7 +95,7 @@ contains all of the same fields as attributes. This behaves similarly to
 Let's create some models!
 
 ```py
-# app/models.py
+# server/models.py
 
 from flask_sqlalchemy import SQLAlchemy
 
@@ -148,9 +146,7 @@ Don't worry though- we'll discuss those nuances in detail here!
 Modify `app.py` to mirror the following:
 
 ```py
-# app/app.py
-
-#!/usr/bin/env python3
+# server/app.py
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -164,7 +160,7 @@ migrate = Migrate(app, db)
 db.init_app(app)
 
 if __name__ == '__main__':
-    app.run(port=5555)
+    app.run(port=5555, debug=True)
 
 ```
 
@@ -177,7 +173,7 @@ our application for use within our database configuration with
 
 We're ready to get started with our migrations. The commands for Flask-Migrate
 are identical to those in Alembic, with the exception of using `flask db` in
-place of `alembic` in commands. Run the following from the `app/` directory in
+place of `alembic` in commands. Run the following from the `server/` directory in
 the command line:
 
 ```console
@@ -188,19 +184,19 @@ $ flask db init
 # =>   warnings.warn(FSADeprecationWarning(
 # => /python-p4-flask-sqlalchemy/.venv/lib/python3.10/site-packages/flask_sqlalchemy/__init__.py:872: FSADeprecationWarning: SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True or False to suppress this warning.
 # =>   warnings.warn(FSADeprecationWarning(
-# =>   Creating directory /python-p4-flask-sqlalchemy/app/migrations ...  done
-# =>   Creating directory /python-p4-flask-sqlalchemy/app/migrations/versions ...  done
-# =>   Generating /python-p4-flask-sqlalchemy/app/migrations/script.py.mako ...  done
-# =>   Generating /python-p4-flask-sqlalchemy/app/migrations/env.py ...  done
-# =>   Generating /python-p4-flask-sqlalchemy/app/migrations/README ...  done
-# =>   Generating /python-p4-flask-sqlalchemy/app/migrations/alembic.ini ...  done
-# =>   Please edit configuration/connection/logging settings in '/python-p4-flask-sqlalchemy/app/migrations/alembic.ini' before proceeding.
+# =>   Creating directory /python-p4-flask-sqlalchemy/server/migrations ...  done
+# =>   Creating directory /python-p4-flask-sqlalchemy/server/migrations/versions ...  done
+# =>   Generating /python-p4-flask-sqlalchemy/server/migrations/script.py.mako ...  done
+# =>   Generating /python-p4-flask-sqlalchemy/server/migrations/env.py ...  done
+# =>   Generating /python-p4-flask-sqlalchemy/server/migrations/README ...  done
+# =>   Generating /python-p4-flask-sqlalchemy/server/migrations/alembic.ini ...  done
+# =>   Please edit configuration/connection/logging settings in '/python-p4-flask-sqlalchemy/server/migrations/alembic.ini' before proceeding.
 ```
 
 Let's heed that warning and set `SQLALCHEMY_TRACK_MODIFICATIONS` to `False`.
 
 ```py
-# app/app.py
+# server/app.py
 
 ...
 app = Flask(__name__)
@@ -210,15 +206,15 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 ```
 
-We're getting a warning to change `app/migrations/alembic.ini` before we
-continue, but our `app/app.py` configuration already manages all of our
+We're getting a warning to change `server/migrations/alembic.ini` before we
+continue, but our `server/app.py` configuration already manages all of our
 unique application configuration variables. We can jump straight into migrating:
 
 ```console
 $ flask db revision --autogenerate -m'Create tables owners, pets'
 # => INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
 # => INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
-# =>   Generating /python-p4-flask-sqlalchemy/app/migrations/versions/a48f1fc37e07_create_tables_owners_pets.py ...  done
+# =>   Generating /python-p4-flask-sqlalchemy/server/migrations/versions/a48f1fc37e07_create_tables_owners_pets.py ...  done
 ```
 
 ...and pushing those migrations to our database:
@@ -231,7 +227,7 @@ $ flask db upgrade head
 ```
 
 We've created a database with Flask-SQLAlchemy and Flask-Migrate! Open
-`app/app.db` (or `app/instance/app.db`, depending on your version of
+`server/app.db` (or `server/instance/app.db`, depending on your version of
 Flask-SQLAlchemy) and you should see the fruits of your labor:
 
 ![Screenshot of SQLite database with three tables: alembic_version, owners, and
@@ -256,7 +252,7 @@ using Flask-SQLAlchemy.
 ## Solution Code
 
 ```py
-# app/app.py
+# server/app.py
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -273,12 +269,12 @@ migrate = Migrate(app, db)
 db.init_app(app)
 
 if __name__ == '__main__':
-    app.run(port=5555)
+    app.run(port=5555, debug=True)
 
 ```
 
 ```py
-# app/models.py
+# server/models.py
 
 from flask_sqlalchemy import SQLAlchemy
 
