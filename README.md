@@ -215,7 +215,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 We're getting a warning to change `server/migrations/alembic.ini` before we
 continue, but our `server/app.py` configuration already manages all of our
-unique application configuration variables. We can jump straight into migrating:
+unique application configuration variables. We can also skip setting
+`render_as_batch` in `env.py`- Flask does that for us!
+
+We can jump straight into migrating:
 
 ```console
 $ flask db revision --autogenerate -m'Create tables owners, pets'
